@@ -18,15 +18,15 @@ public class Maladie {
 	}
 	
 	public void changerNiveau(int niveau) {
-		
+		this.niveau = niveau;
 	}
 	
 	public void augmenterNiveau() {
-		
+		this.niveau += 1;
 	}
 	
 	public void diminuerNiveau() {
-		
+		this.niveau -= 1;
 	}
 	
 }
