@@ -11,4 +11,9 @@ public class Elfe extends Creature implements Demoralisant {
 
 	}
 
+	@Override
+	public void trepasser() {
+		
+	}
+
 }

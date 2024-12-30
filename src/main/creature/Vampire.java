@@ -16,4 +16,9 @@ public class Vampire extends Creature implements Demoralisant, Regenerant {
 
 	}
 
+	@Override
+	public void trepasser() {
+		
+	}
+
 }

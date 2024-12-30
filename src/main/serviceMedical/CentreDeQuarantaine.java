@@ -6,4 +6,9 @@ public class CentreDeQuarantaine extends ServiceMedical {
 		super(nom, superficie, nbMaxCreatures, budget);
 	}
 
+	@Override
+	public void reviserBudget() {
+		
+	}
+
 }

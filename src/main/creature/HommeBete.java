@@ -6,4 +6,10 @@ public class HommeBete extends Creature {
 		super(nom, sexe, poids, taille, age, moral);
 	}
 
+	@Override
+	public void trepasser() {
+		
+	}
+	
+	
 }

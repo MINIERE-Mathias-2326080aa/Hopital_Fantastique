@@ -13,4 +13,20 @@ public class Maladie {
 		this.niveauMax = niveauMax;
 	}
 	
+	public boolean estLetal() {
+		return niveau == niveauMax;
+	}
+	
+	public void changerNiveau(int niveau) {
+		
+	}
+	
+	public void augmenterNiveau() {
+		
+	}
+	
+	public void diminuerNiveau() {
+		
+	}
+	
 }

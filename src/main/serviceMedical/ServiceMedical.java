@@ -18,4 +18,20 @@ public class ServiceMedical {
 		this.nbMaxCreatures = nbMaxCreatures;
 		this.budget = budget;
 	}
+	
+	public void afficherCaracteristiques() {
+		
+	}
+	
+	public void ajouterCreature(Creature creature) {
+		
+	}
+	
+	public void enleverCreature(Creature creature) {
+		
+	}
+	
+	public void reviserBudget() {
+		
+	}
 }

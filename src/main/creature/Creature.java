@@ -17,4 +17,22 @@ public abstract class Creature {
 		this.age = age;
 		this.moral = moral;
 	}
+	
+	public void attendre() {
+		
+	}
+	
+	public void hurler() {
+		
+	}
+	
+	public void semporter() {
+		
+	}
+	
+	protected void contaminer() {
+		
+	}
+	
+	public abstract void trepasser();
 }

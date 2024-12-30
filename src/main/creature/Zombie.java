@@ -11,4 +11,9 @@ public class Zombie extends Creature implements Regenerant {
 
 	}
 
+	@Override
+	public void trepasser() {
+		
+	}
+
 }
