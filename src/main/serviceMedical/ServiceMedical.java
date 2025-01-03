@@ -53,12 +53,20 @@ public class ServiceMedical {
 				System.out.println("Les services médicaux peuvent accueillir uniquement des créatures de même type.");
 			} else {
 				creatures.add(creature);
+				creature.setCreaturesProches(creatures);
+				for (Creature patient : creatures) {
+					patient.ajouterCreatureProche(creature);
+				}
 			}
 		}
 	}
 	
 	public void enleverCreature(Creature creature) {
 		this.creatures.remove(creature);
+		creature.setCreaturesProches(null);
+		for (Creature patient : creatures) {
+			patient.enleverCreatureProche(creature);
+		}
 	}
 	
 	public void reviserBudget() {
