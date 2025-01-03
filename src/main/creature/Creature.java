@@ -14,6 +14,7 @@ public abstract class Creature {
 	private int age;
 	private int moral;
 	private List<Maladie> maladies = new ArrayList<Maladie>();
+	private List<Creature> creaturesProches = new ArrayList<Creature>();
 	private boolean hurler = false;
 	
 	public Creature(String nom, String sexe, int poids, int taille, int age, int moral, Maladie maladie) {
@@ -38,23 +39,11 @@ public abstract class Creature {
 	
 	public void semporter(List<Creature> creaturesProches) {
 		System.out.println(this.getNom() + "s'emporte.");
-		for (Creature creature : creaturesProches) {
-			Random r = new Random();
-			if (r.nextInt(100) > 50) {
-				contaminer(creature);
-			}
-		}
+		
 	}
 	
 	public void ajouterMaladie(Maladie maladie) {
 		this.maladies.add(maladie);
-	}
-	
-	private void contaminer(Creature creature) {
-		Random random = new Random();
-		Maladie maladie = this.maladies.get(random.nextInt(maladies.size()));
-		creature.ajouterMaladie(maladie);
-		System.out.println("La créature " + creature.getNom() + " a été infecté par la maladie " + maladie.getNomComplet());
 	}
 	
 	public abstract void trepasser();
@@ -88,6 +77,22 @@ public abstract class Creature {
 
 	public List<Maladie> getMaladies() {
 		return maladies;
+	}
+	
+	public List<Creature> getCreaturesProches() {
+		return creaturesProches;
+	}
+
+	public void setCreaturesProches(List<Creature> creaturesProches) {
+		this.creaturesProches = creaturesProches;
+	}
+	
+	public void ajouterCreatureProche(Creature creature) {
+		this.creaturesProches.add(creature);
+	}
+	
+	public void enleverCreatureProche(Creature creature) {
+		this.creaturesProches.remove(creature);
 	}
 
 	@Override
