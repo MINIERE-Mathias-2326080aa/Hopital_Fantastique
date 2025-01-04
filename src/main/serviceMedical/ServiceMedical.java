@@ -63,7 +63,6 @@ public class ServiceMedical {
 	
 	public void enleverCreature(Creature creature) {
 		this.creatures.remove(creature);
-		creature.setCreaturesProches(null);
 		for (Creature patient : creatures) {
 			patient.enleverCreatureProche(creature);
 		}
@@ -76,4 +75,9 @@ public class ServiceMedical {
 	public List<Creature> getCreatures() {
 		return creatures;
 	}
+
+	public String getNom() {
+		return nom;
+	}
+	
 }

@@ -7,6 +7,8 @@ import java.util.Scanner;
 import main.creature.*;
 import main.hopital.*;
 import main.maladie.Maladie;
+import main.serviceMedical.CentreDeQuarantaine;
+import main.serviceMedical.ServiceMedical;
 
 public class Main {
 	public static void main(String[] args){		

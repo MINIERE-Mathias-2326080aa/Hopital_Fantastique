@@ -1,5 +1,9 @@
 package main.creature;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import main.maladie.Maladie;
 import main.serviceMedical.ServiceMedical;
 
 public class Medecin {
@@ -25,7 +29,25 @@ public class Medecin {
 	}
 
 	public void examinerService(ServiceMedical service) {
-		
+		service.afficherCaracteristiques();
+	}
+	
+	public void soignerCreature(Creature creature, Maladie maladie) {
+		creature.enleverMaladie(maladie);
+	}
+	
+	public void transfererCreature(Creature creature, ServiceMedical serviceSource, ServiceMedical serviceDestination) {
+		serviceSource.enleverCreature(creature);
+		serviceDestination.ajouterCreature(creature);
+	}
+
+	public void transfererCreature(Creature creature, List<Creature> source, ServiceMedical serviceDestination) {
+		List<Creature> creaturesProches = new ArrayList<Creature>(source);
+		for (Creature patient : creaturesProches) {
+			patient.enleverCreatureProche(creature);
+		}
+		source.remove(creature);
+		serviceDestination.ajouterCreature(creature);
 	}
 
 	@Override

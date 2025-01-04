@@ -14,6 +14,8 @@ public class CentreDeQuarantaine extends ServiceMedical {
 	public void ajouterCreature(Creature creature) {
 		if (Arrays.asList(creature.getClass().getInterfaces()).contains(Contaminant.class)) {
 			super.ajouterCreature(creature);
+		} else {
+			System.out.println("Seules les créatures contaminantes peuvent être ajoutés dans un centre de qurantaine.");
 		}
 	}
 

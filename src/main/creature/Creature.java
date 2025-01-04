@@ -46,6 +46,10 @@ public abstract class Creature {
 		this.maladies.add(maladie);
 	}
 	
+	public void enleverMaladie(Maladie maladie) {
+		this.maladies.remove(maladie);
+	}
+	
 	public abstract void trepasser();
 	public boolean estVIP() {
 		return false;
