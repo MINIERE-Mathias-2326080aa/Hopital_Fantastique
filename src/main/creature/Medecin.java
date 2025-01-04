@@ -37,17 +37,26 @@ public class Medecin {
 	}
 	
 	public void transfererCreature(Creature creature, ServiceMedical serviceSource, ServiceMedical serviceDestination) {
-		serviceSource.enleverCreature(creature);
-		serviceDestination.ajouterCreature(creature);
+		if (serviceDestination.peutAjouter(creature)) {
+			serviceSource.enleverCreature(creature);
+			serviceDestination.ajouterCreature(creature);
+		} else {
+			System.out.println("La créature n'a pas pu être transférée.");
+		}
 	}
 
 	public void transfererCreature(Creature creature, List<Creature> source, ServiceMedical serviceDestination) {
-		List<Creature> creaturesProches = new ArrayList<Creature>(source);
-		for (Creature patient : creaturesProches) {
-			patient.enleverCreatureProche(creature);
+		if (serviceDestination.peutAjouter(creature)) {
+			List<Creature> creaturesProches = new ArrayList<Creature>(source);
+			for (Creature patient : creaturesProches) {
+				patient.enleverCreatureProche(creature);
+			}
+			source.remove(creature);
+			serviceDestination.ajouterCreature(creature);
+		} else {
+			System.out.println("La créature n'a pas pu être transférée.");
 		}
-		source.remove(creature);
-		serviceDestination.ajouterCreature(creature);
+		
 	}
 
 	@Override

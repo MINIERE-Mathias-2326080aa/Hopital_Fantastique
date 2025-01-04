@@ -44,21 +44,13 @@ public class ServiceMedical {
 	}
 	
 	public void ajouterCreature(Creature creature) {
-		if (creatures.isEmpty()) {
-			creatures.add(creature);
-		} else {
-			if (creatures.size() >= nbMaxCreatures) {
-				System.out.println("Nombre maximum de creatures atteint.");
-			} else if (creatures.getFirst().getClass() != creature.getClass()) {
-				System.out.println("Les services médicaux peuvent accueillir uniquement des créatures de même type.");
-			} else {
-				creatures.add(creature);
-				creature.setCreaturesProches(creatures);
-				for (Creature patient : creatures) {
-					patient.ajouterCreatureProche(creature);
-				}
+		creature.setCreaturesProches(new ArrayList<Creature>(creatures));
+		if (!creatures.isEmpty()) {
+			for (int i = 0; i < creatures.size(); ++i) {
+				creatures.get(i).ajouterCreatureProche(creature);
 			}
 		}
+		creatures.add(creature);
 	}
 	
 	public void enleverCreature(Creature creature) {
@@ -70,6 +62,10 @@ public class ServiceMedical {
 	
 	public void reviserBudget() {
 		
+	}
+	
+	public boolean peutAjouter(Creature creature) {
+		return (creatures.isEmpty() || (creatures.getFirst().getClass() == creature.getClass() && (creatures.size() < nbMaxCreatures)));
 	}
 
 	public List<Creature> getCreatures() {

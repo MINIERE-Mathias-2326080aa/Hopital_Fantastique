@@ -13,7 +13,7 @@ public class Crypte extends ServiceMedical {
 	
 	@Override
 	public void ajouterCreature(Creature creature) {
-		if (Arrays.asList(creature.getClass().getInterfaces()).contains(Regenerant.class)) {
+		if (peutAjouter(creature)) {
 			super.ajouterCreature(creature);
 		}
 	}
@@ -21,5 +21,11 @@ public class Crypte extends ServiceMedical {
 	public void reviserBudget() {
 		
 	}
+
+	@Override
+	public boolean peutAjouter(Creature creature) {
+		return (super.peutAjouter(creature) || Arrays.asList(creature.getClass().getInterfaces()).contains(Regenerant.class));
+	}
+	
 
 }

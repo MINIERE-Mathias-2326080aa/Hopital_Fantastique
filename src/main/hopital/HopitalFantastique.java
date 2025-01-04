@@ -1,7 +1,6 @@
 package main.hopital;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class HopitalFantastique{
 		Maladie maladie = getMaladies().get(random.nextInt(getMaladies().size()));
 		Creature creature;
 		String sexe = random.nextBoolean() ? "H" : "F";
-		switch(random.nextInt(7)) {
+		switch(random.nextInt(8)) {
 			case(0):
 				creature = new Elfe("elfe", sexe, random.nextInt(60,120), random.nextInt(150, 200), random.nextInt(15,100), 100, maladie);
 				break;
@@ -57,6 +56,7 @@ public class HopitalFantastique{
 				break;
 			default:
 				creature = new Reptilien("reptilien", sexe, random.nextInt(60,120), random.nextInt(150, 200), random.nextInt(15,100), 100, maladie);
+				break;
 		}
 		return creature;
 	}
@@ -380,7 +380,7 @@ public class HopitalFantastique{
 					}
 					System.out.println("Quelle créature voulez-vous transférer ?");
 					Creature creature = choisirCreatureListeAttente();
-					System.out.println("Dans quel service médical voulez-vous le transférer");
+					System.out.println("Dans quel service médical voulez-vous le transférer ?");
 					ServiceMedical serviceDestination = choisirServiceMedical();
 					medecin.transfererCreature(creature, this.listeAttente, serviceDestination);
 				} else {
