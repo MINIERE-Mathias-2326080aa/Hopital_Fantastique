@@ -3,7 +3,6 @@ package main.hopital;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,7 +15,7 @@ import main.serviceMedical.*;
 
 public class HopitalFantastique{
 	private static Random random = new Random();
-	private Map<Integer, Creature> listeAttente;
+	private List<Creature> listeAttente;
 	private List<ServiceMedical> listeService;
 	private static List<Maladie> maladies;
 	private Map<Integer, Medecin> medecins;
@@ -24,16 +23,16 @@ public class HopitalFantastique{
 	public static boolean quitter = false;
 	
 	public HopitalFantastique() {
-		this.listeAttente = new HashMap<Integer,Creature>();
-		this.listeService = new LinkedList<ServiceMedical>();
+		this.listeAttente = new ArrayList<Creature>();
+		this.listeService = new ArrayList<ServiceMedical>();
 		this.medecins = new HashMap<Integer, Medecin>();
 	}
 
-	public Map<Integer, Creature> getListeAttente() {
+	public List<Creature> getListeAttente() {
 		return this.listeAttente;
 	}
 
-	public void setListeAttente(Map<Integer, Creature> listeAttente) {
+	public void setListeAttente(ArrayList<Creature> listeAttente) {
 		this.listeAttente = listeAttente;
 	}
 
@@ -97,37 +96,37 @@ public class HopitalFantastique{
 	}
 	
 	public void ajouterCreature(Creature creature) {
-		int cle = 0;
-		if (!this.getListeAttente().isEmpty()) {
-			while (this.getListeAttente().containsKey(cle)) {
-				++cle;
-			}
+		List<Creature> creaturesProches = new ArrayList<Creature>(getListeAttente());
+		creature.setCreaturesProches(creaturesProches);
+		for (Creature patient : creaturesProches) {
+			patient.ajouterCreatureProche(creature);
 		}
-		listeAttente.put(cle, creature);
+		listeAttente.addLast(creature);
 	}
-	
-	private void afficherListeAttente() {
+
+	public void afficherListeAttente() {
 		System.out.println("---------------------------");
 		System.out.println("Liste des créatures de la file d'attente :");
-		for (Creature creature : listeAttente.values()) {
+		List<Creature> creatures = new ArrayList<Creature>(getListeAttente());
+		for (Creature creature : creatures) {
 			System.out.println(creature);
 		}
 	}
-	private void afficherMedecins() {
+	public void afficherMedecins() {
 		System.out.println("---------------------------");
 		System.out.println("Liste des médecins:");
 		for (Entry <Integer, Medecin> entry : medecins.entrySet()) {
-			System.out.println("Identifiant : " + entry.getKey() + ", " + entry.getValue());
+			System.out.println("(" + entry.getKey() + ") " + entry.getValue());
 		}
 	}
-	private static void afficherMaladies() {
+	public static void afficherMaladies() {
 		System.out.println("---------------------------");
 		System.out.println("Liste des maladies:");
 		for (Maladie maladie : maladies) {
 			System.out.println(maladie);
 		}
 	}
-	private void afficherServicesMedicaux() {
+	public void afficherServicesMedicaux() {
 		System.out.println("---------------------------");
 		System.out.println("Liste des services médicaux :");
 		for (ServiceMedical serviceMedical : listeService) {
@@ -135,8 +134,15 @@ public class HopitalFantastique{
 			System.out.println("---------------------------");
 		}
 	}
+	public void afficherNbPatients() {
+		int nbPatient = listeAttente.size();
+		for (ServiceMedical service : listeService) {
+			nbPatient += service.getCreatures().size();
+		}
+		System.out.println("L'hopital posssède actuellement " + nbPatient + " patients.");
+	}
 	
-	private void ajouterMedecin() {
+	public void ajouterMedecin() {
 		System.out.println("Comment voulez-vous ajouter un médecin ?");
 		System.out.println("0 Automatiquement");
 		System.out.println("1 Manuellement");
@@ -235,7 +241,7 @@ public class HopitalFantastique{
 		}
 	}
 	
-	private void creerServiceMedical() {
+	public void creerServiceMedical() {
 		String type;
 		String nom;
 		int superficie;
@@ -304,11 +310,11 @@ public class HopitalFantastique{
 		this.listeService.add(service);
 	}
 	
-	private void gererMedecins() {
+	public void gererMedecins() {
 		
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args){		
 		HopitalFantastique hopital = new HopitalFantastique();
 		
 		Maladie mdc = new Maladie("Maladie débilitante chronique", "MDC", 1, 5);
@@ -319,13 +325,17 @@ public class HopitalFantastique{
 		Maladie bg = new Maladie("Nom de maladie à définir", "NDMAD", 1, 5);
 		HopitalFantastique.setMaladies(Arrays.asList(mdc,fomo,drs,pec,zpl,bg));
 		
-		Medecin medecin1 = new Medecin(genererCreature());
-		Medecin medecin2 = new Medecin(genererCreature());
-		Medecin medecin3 = new Medecin(genererCreature());
+		Medecin medecin1 = new Medecin(HopitalFantastique.genererCreature());
+		Medecin medecin2 = new Medecin(HopitalFantastique.genererCreature());
+		Medecin medecin3 = new Medecin(HopitalFantastique.genererCreature());
 		hopital.setMedecins(new ArrayList<Medecin>(Arrays.asList(medecin1,medecin2,medecin3)));
 		
+		Runnable hopitalJob = new HopitalJob(hopital);
+		Thread hopitalThread = new Thread(hopitalJob);
+		hopitalThread.start();
 		
-		while(!quitter) { 
+		Scanner scanner = new Scanner(System.in);
+		while(!HopitalFantastique.quitter) { 
 			System.out.println("---------------------------");
 			System.out.println("Que voulez-vous faire :");
 			System.out.println("0 Quitter");
@@ -333,22 +343,23 @@ public class HopitalFantastique{
 			System.out.println("2 Afficher les médecins");
 			System.out.println("3 Afficher les maladies");
 			System.out.println("4 Afficher les services médicaux");
-			System.out.println("5 Ajouter un médecin");
-			System.out.println("6 Créer un service medical");
-			System.out.println("7 Gérer les médecins");
+			System.out.println("5 Afficher le nombre de patients");
+			System.out.println("6 Ajouter un médecin");
+			System.out.println("7 Créer un service medical");
+			System.out.println("8 Gérer les médecins");
 			System.out.println("---------------------------");
-			Scanner scanner = new Scanner(System.in);
 			int choix = scanner.nextInt();
 			scanner.nextLine();
 			
-			while (choix < 0 || 7 < choix) {
+			while (choix < 0 || 8 < choix) {
 				System.out.println("Veuillez faire un choix valable");
 				choix = scanner.nextInt();
 				scanner.nextLine();
 			}
+			
 			switch(choix) {
 				case 0:
-					quitter = true;
+					HopitalFantastique.quitter = true;
 					break;
 				case 1:
 					hopital.afficherListeAttente();
@@ -357,23 +368,25 @@ public class HopitalFantastique{
 					hopital.afficherMedecins();
 					break;
 				case(3):
-					afficherMaladies();
+					HopitalFantastique.afficherMaladies();
 					break;
 				case(4):
 					hopital.afficherServicesMedicaux();
 					break;
 				case(5):
-					hopital.ajouterMedecin();
+					hopital.afficherNbPatients();
 					break;
 				case(6):
+					hopital.ajouterMedecin();
+					break;
+				case(7):
 					hopital.creerServiceMedical();
 					break;
-				case (7):
+				case(8):
 					hopital.gererMedecins();
 					break;
 			}
-			
 		}
-
+		scanner.close();
 	}
 }
