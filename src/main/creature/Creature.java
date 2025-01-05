@@ -29,21 +29,34 @@ public abstract class Creature {
 	}
 	
 	public void attendre() {
-		
+		if (moral <= 0) {
+			if (!hurler) {
+				hurler();
+			} else {
+				semporter();
+			}
+		} else if (moral < 10) {
+			moral = 0;
+		} else {
+			moral -= 10;
+		}
 	}
 	
 	public void hurler() {
-		System.out.println(this.getNom() + "hurle.");
+		System.out.println("[" + this.getNom() + " hurle]");
 		this.hurler = true;
 	}
 	
-	public void semporter(List<Creature> creaturesProches) {
-		System.out.println(this.getNom() + "s'emporte.");
+	public void semporter() {
+		System.out.println("[" + this.getNom() + " s'emporte]");
 		
 	}
 	
 	public void ajouterMaladie(Maladie maladie) {
-		this.maladies.add(maladie);
+		if (!maladies.contains(maladie)) {
+			this.maladies.add(new Maladie(maladie));
+			System.out.println("La créature " + getNom() + " a été infecté par la maladie " + maladie.getNomComplet());
+		}
 	}
 	
 	public void enleverMaladie(Maladie maladie) {
@@ -75,6 +88,10 @@ public abstract class Creature {
 		return taille;
 	}
 
+	public void setMoral(int moral) {
+		this.moral = moral;
+	}
+	
 	public int getMoral() {
 		return moral;
 	}

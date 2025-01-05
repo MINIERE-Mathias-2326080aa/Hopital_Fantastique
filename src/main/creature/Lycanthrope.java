@@ -1,6 +1,5 @@
 package main.creature;
 
-import java.util.List;
 import java.util.Random;
 
 import main.maladie.Maladie;
@@ -12,9 +11,9 @@ public class Lycanthrope extends Creature implements Contaminant{
 	}
 
 	@Override
-	public void semporter(List<Creature> creaturesProches) {
-		super.semporter(creaturesProches);
-		for (Creature creature : creaturesProches) {
+	public void semporter() {
+		super.semporter();
+		for (Creature creature : super.getCreaturesProches()) {
 			Random r = new Random();
 			if (r.nextInt(100) > 50) {
 				contaminer(creature);
@@ -27,17 +26,11 @@ public class Lycanthrope extends Creature implements Contaminant{
 		Random random = new Random();
 		Maladie maladie = this.getMaladies().get(random.nextInt(this.getMaladies().size()));
 		creature.ajouterMaladie(maladie);
-		System.out.println("La créature " + creature.getNom() + " a été infecté par la maladie " + maladie.getNomComplet());
 	}
 
 	@Override
 	public void trepasser() {
-		for (Creature creature : this.getCreaturesProches()) {
-			Random r = new Random();
-			if (r.nextInt(100) > 50) {
-				contaminer(creature);
-			}
-		}
+		
 	}
 
 }

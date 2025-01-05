@@ -1,6 +1,5 @@
 package main.creature;
 
-import java.util.List;
 import java.util.Random;
 
 import main.maladie.Maladie;
@@ -12,9 +11,9 @@ public class HommeBete extends Creature implements Contaminant{
 	}
 
 	@Override
-	public void semporter(List<Creature> creaturesProches) {
-		super.semporter(creaturesProches);
-		for (Creature creature : creaturesProches) {
+	public void semporter() {
+		super.semporter();
+		for (Creature creature : super.getCreaturesProches()) {
 			Random r = new Random();
 			if (r.nextInt(100) > 50) {
 				contaminer(creature);

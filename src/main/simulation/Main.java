@@ -25,6 +25,10 @@ public class Main {
 		Medecin medecin3 = new Medecin(HopitalFantastique.genererCreature());
 		hopital.setMedecins(new ArrayList<Medecin>(Arrays.asList(medecin1,medecin2,medecin3)));
 		
+		Runnable creatureJob = new CreatureJob(hopital);
+		Thread creatureThread = new Thread(creatureJob);
+		creatureThread.start();
+		
 		Runnable hopitalJob = new HopitalJob(hopital);
 		Thread hopitalThread = new Thread(hopitalJob);
 		hopitalThread.start();

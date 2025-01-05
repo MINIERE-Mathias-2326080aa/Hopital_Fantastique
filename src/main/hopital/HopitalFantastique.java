@@ -29,7 +29,7 @@ public class HopitalFantastique{
 	}
 
 	public static Creature genererCreature() {
-		Maladie maladie = getMaladies().get(random.nextInt(getMaladies().size()));
+		Maladie maladie = new Maladie(getMaladies().get(random.nextInt(getMaladies().size())));
 		Creature creature;
 		String sexe = random.nextBoolean() ? "H" : "F";
 		switch(random.nextInt(8)) {
@@ -296,8 +296,7 @@ public class HopitalFantastique{
 			case(2):
 				service = new CentreDeQuarantaine(nom, superficie, nbMaxCreatures, budget);
 		}
-		this.listeService.put(compteurService, service);
-		++this.compteurService;
+		ajouterService(service);
 	}
 	
 	public void gererMedecins() {
@@ -345,7 +344,7 @@ public class HopitalFantastique{
 				System.out.println("Choisissez dans quel service vous voulez soigner une créature :");
 				ServiceMedical service = choisirServiceMedical();
 				if (service.getCreatures().isEmpty()) {
-					System.out.println("Choisissez un autre service ou transférez une creature vers ce service.");
+					System.out.println("Choisissez un autre service ou transférez une créature vers ce service.");
 					break;
 				} else {
 					System.out.println("Quelle créature voulez-vous soigner ?");
@@ -465,6 +464,13 @@ public class HopitalFantastique{
 	}
 	
 	// Getters et Setters
+	public List<Creature> getToutesCreatures(){
+		List<Creature> creatures = new ArrayList<Creature>(listeAttente);
+		for (int i=0; i<listeService.size(); ++i) {
+			creatures.addAll(listeService.get(i).getCreatures());
+		}
+		return creatures;
+	}
 	public List<Creature> getListeAttente() {
 		return this.listeAttente;
 	}

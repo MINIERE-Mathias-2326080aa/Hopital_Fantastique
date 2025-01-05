@@ -13,6 +13,13 @@ public class Maladie {
 		this.niveau = niveau;
 		this.niveauMax = niveauMax;
 	}
+	
+	public Maladie(Maladie maladie) {
+		this.nomComplet = maladie.getNomComplet();
+		this.nomAbrege = maladie.getNomAbrege();
+		this.niveau = maladie.getNiveau();
+		this.niveauMax = maladie.getNiveauMax();
+	}
 
 	public boolean estLetal() {
 		return niveau == niveauMax;
@@ -27,20 +34,36 @@ public class Maladie {
 	}
 	
 	public void augmenterNiveau() {
-		this.niveau += 1;
+		if (niveau < niveauMax) {	
+			this.niveau += 1;
+		}
 	}
 	
 	public void diminuerNiveau() {
-		this.niveau -= 1;
+		if (niveau > 0) {
+			this.niveau -= 1;
+		}
 	}
 
 	public String getNomComplet() {
 		return nomComplet;
 	}
 
+	public String getNomAbrege() {
+		return nomAbrege;
+	}
+
+	public int getNiveau() {
+		return niveau;
+	}
+
+	public int getNiveauMax() {
+		return niveauMax;
+	}
+
 	@Override
 	public String toString() {
-		return "Maladie [nomComplet=" + nomComplet + ", nomAbrege=" + nomAbrege + ", niveauMax=" + niveauMax + "]";
+		return "Maladie [nomComplet=" + nomComplet + ", nomAbrege=" + nomAbrege + ", niveau=" + niveau + ", niveauMax=" + niveauMax + "]";
 	}
 	
 }
