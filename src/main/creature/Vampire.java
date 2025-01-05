@@ -30,7 +30,12 @@ public class Vampire extends Creature implements Demoralisant, Regenerant, Conta
 
 	@Override
 	public void regenerer() {
-		
+		for (int i = 0; i < getMaladies().size();++i) {
+			if (getMaladies().get(i).estLetal()) {
+				getMaladies().remove(i);
+			}
+		}
+		System.out.println("[" + this.getNom() + " régénère]");
 	}
 
 	@Override
@@ -41,15 +46,19 @@ public class Vampire extends Creature implements Demoralisant, Regenerant, Conta
 			if (moral < 10) {
 				creature.setMoral(0);
 			} else {
-				creature.setMoral(moral-10);
+				creature.diminuerMoral(10);;
 			}
 		}
+		System.out.println("[" + this.getNom() + " démoralise toute les créatures proches d'elle]");
 	}
 
 	@Override
 	public void trepasser() {
+		System.out.println("[" + this.getNom() + " trépasse]");
 		demoraliser();
-		contaminer(getCreaturesProches().get(new Random().nextInt(getCreaturesProches().size())));
+		if (!getMaladies().isEmpty()) {
+			contaminer(getCreaturesProches().get(new Random().nextInt(getCreaturesProches().size())));
+		}
 		regenerer();
 	}
 

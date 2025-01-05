@@ -30,7 +30,10 @@ public class Lycanthrope extends Creature implements Contaminant{
 
 	@Override
 	public void trepasser() {
-		
+		System.out.println("[" + this.getNom() + " trépasse]");
+		if (!getMaladies().isEmpty()) {
+			contaminer(getCreaturesProches().get(new Random().nextInt(getCreaturesProches().size())));
+		}
 	}
 
 }

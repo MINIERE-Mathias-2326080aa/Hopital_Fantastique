@@ -26,12 +26,14 @@ public class HommeBete extends Creature implements Contaminant{
 		Random random = new Random();
 		Maladie maladie = this.getMaladies().get(random.nextInt(this.getMaladies().size()));
 		creature.ajouterMaladie(maladie);
-		System.out.println("La créature " + creature.getNom() + " a été infecté par la maladie " + maladie.getNomComplet());
 	}
 	
 	@Override
 	public void trepasser() {
-		
+		System.out.println("[" + this.getNom() + " trépasse]");
+		if (!getMaladies().isEmpty()) {
+			contaminer(getCreaturesProches().get(new Random().nextInt(getCreaturesProches().size())));
+		}
 	}
 	
 	

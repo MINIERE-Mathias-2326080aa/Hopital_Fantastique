@@ -2,8 +2,6 @@ package main.creature;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import main.maladie.Maladie;
 
 public abstract class Creature {
@@ -35,10 +33,17 @@ public abstract class Creature {
 			} else {
 				semporter();
 			}
-		} else if (moral < 10) {
-			moral = 0;
+		} else if (estVIP()){
+			diminuerMoral(30);
 		} else {
-			moral -= 10;
+			int ancienMoral = moral;
+			for (int i = 0; i < getCreaturesProches().size() && moral==ancienMoral;++i) {
+				if (this.getClass().getSimpleName() == creaturesProches.get(i).getClass().getSimpleName()) {
+					diminuerMoral(5);
+				} else {
+					diminuerMoral(10);
+				}
+			}
 		}
 	}
 	
@@ -53,10 +58,13 @@ public abstract class Creature {
 	}
 	
 	public void ajouterMaladie(Maladie maladie) {
-		if (!maladies.contains(maladie)) {
-			this.maladies.add(new Maladie(maladie));
-			System.out.println("La créature " + getNom() + " a été infecté par la maladie " + maladie.getNomComplet());
+		for (int i = 0; i < maladies.size(); ++i) {
+			if (maladie.getNomAbrege() == maladies.get(i).getNomAbrege()) {
+				return;
+			}
 		}
+		this.maladies.add(new Maladie(maladie));
+		System.out.println("[La créature " + getNom() + " a été infecté par la maladie " + maladie.getNomComplet() + "]");
 	}
 	
 	public void enleverMaladie(Maladie maladie) {
@@ -66,6 +74,27 @@ public abstract class Creature {
 	public abstract void trepasser();
 	public boolean estVIP() {
 		return false;
+	}
+	
+	public void diminuerMoral(int quantite) {
+		if (this.moral - quantite > 0) {
+			setMoral(this.moral - quantite);
+		} else {
+			setMoral(0);
+		}
+	}
+	
+	public void afficherCreature() {
+		System.out.println("Nom : " + nom);
+		System.out.println("Sexe : " + (sexe=="M" ? "Male" : "Femelle"));
+		System.out.println("Poids : " + poids + "kg");
+		System.out.println("Taille : " + taille + "cm");
+		System.out.println("Moral : " + moral);
+		System.out.println("Maladies :");
+		for (int i = 0 ; i < maladies.size(); ++i) {
+			System.out.println("----------");
+			maladies.get(i).afficherMaladie();
+		}
 	}
 
 	public String getNom() {

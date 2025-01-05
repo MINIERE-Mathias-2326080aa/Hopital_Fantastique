@@ -10,12 +10,18 @@ public class Zombie extends Creature implements Regenerant {
 
 	@Override
 	public void regenerer() {
-
+		for (int i = 0; i < getMaladies().size();++i) {
+			if (getMaladies().get(i).estLetal()) {
+				getMaladies().remove(i);
+			}
+		}
+		System.out.println("[" + this.getNom() + " régénère]");
 	}
 
 	@Override
 	public void trepasser() {
-		
+		System.out.println("[" + this.getNom() + " trépasse]");
+		regenerer();
 	}
 
 }

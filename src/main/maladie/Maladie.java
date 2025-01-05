@@ -25,10 +25,6 @@ public class Maladie {
 		return niveau == niveauMax;
 	}
 	
-	public boolean estGuerie() {
-		return niveau == 0;
-	}
-	
 	public void changerNiveau(int niveau) {
 		this.niveau = niveau;
 	}
@@ -43,6 +39,13 @@ public class Maladie {
 		if (niveau > 0) {
 			this.niveau -= 1;
 		}
+	}
+	
+	public void afficherMaladie() {
+		System.out.println("Nom complet : " + nomComplet);
+		System.out.println("Nom abrégé : " + nomAbrege);
+		System.out.println("Niveau : " + niveau);
+		System.out.println("Niveau max : " + niveauMax);
 	}
 
 	public String getNomComplet() {

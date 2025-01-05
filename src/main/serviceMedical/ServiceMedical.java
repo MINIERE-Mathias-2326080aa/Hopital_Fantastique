@@ -39,7 +39,8 @@ public class ServiceMedical {
 		System.out.println("Nombre maximum de créature : " + nbMaxCreatures);
 		System.out.println("Créatures :");
 		for (Creature creature : creatures) {
-			System.out.println(creature);
+			System.out.println("---------------------------");
+			creature.afficherCreature();
 		}
 	}
 	

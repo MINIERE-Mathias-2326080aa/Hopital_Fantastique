@@ -1,5 +1,7 @@
 package main.hopital;
 
+import java.util.Random;
+
 import main.creature.*;
 
 public class HopitalJob implements Runnable {
@@ -14,9 +16,10 @@ public class HopitalJob implements Runnable {
 		while (!HopitalFantastique.quitter) {
 			Creature creature = HopitalFantastique.genererCreature();
 			hopital.ajouterCreature(creature);
+			int tempsAttente = new Random().nextInt(200,600);
 			try {
 				for (int i = 0; !HopitalFantastique.quitter && i < 100 ; ++i) {
-					Thread.sleep(200);
+					Thread.sleep(tempsAttente);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();

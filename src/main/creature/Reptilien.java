@@ -10,7 +10,7 @@ public class Reptilien extends Creature {
 
 	@Override
 	public void trepasser() {
-
+		System.out.println("[" + this.getNom() + " trépasse]");
 	}
 
 	@Override
