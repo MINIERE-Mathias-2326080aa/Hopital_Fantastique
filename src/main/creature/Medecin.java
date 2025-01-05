@@ -29,17 +29,29 @@ public class Medecin {
 		this.sexe = sexe;
 		this.age = age;
 	}
-
+	/**
+	 * Affiche les caratéristiques d'un service médical.
+	 * @param service Le service médical.
+	 */
 	public void examinerService(ServiceMedical service) {
 		service.afficherCaracteristiques();
 		this.nbAction -= 1;
 	}
-	
+	/**
+	 * Enlève une maladie d'une créature.
+	 * @param creature La créature soignée.
+	 * @param maladie La maladie enlevée.
+	 */
 	public void soignerCreature(Creature creature, Maladie maladie) {
 		creature.enleverMaladie(maladie);
 		this.nbAction -= 1;
 	}
-	
+	/**
+	 * Déplace une créature d'un service médical à un autre.
+	 * @param creature La créature déplacée.
+	 * @param serviceSource Le service médical d'où provient la créature.
+	 * @param serviceDestination Le service médical de destination.
+	 */
 	public void transfererCreature(Creature creature, ServiceMedical serviceSource, ServiceMedical serviceDestination) {
 		if (serviceDestination.peutAjouter(creature)) {
 			serviceSource.enleverCreature(creature);
@@ -51,6 +63,12 @@ public class Medecin {
 		}
 	}
 
+	/**
+	 * Déplace une créature de la liste d'attente à un service médical.
+	 * @param creature La créature déplacée.
+	 * @param source La liste d'où provient la créature.
+	 * @param serviceDestination Le service médical de destination.
+	 */
 	public void transfererCreature(Creature creature, List<Creature> source, ServiceMedical serviceDestination) {
 		if (serviceDestination.peutAjouter(creature)) {
 			List<Creature> creaturesProches = new ArrayList<Creature>(source);
@@ -66,7 +84,10 @@ public class Medecin {
 		}
 		
 	}
-	
+	/**
+	 * Renvoie vrai si le nombre d'action est supérieur à 0.
+	 * @return true si le nombre d'action est supérieur à 0.
+	 */
 	public boolean peutAgir() {
 		return nbAction > 0;
 	}

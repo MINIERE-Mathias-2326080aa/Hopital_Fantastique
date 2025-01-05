@@ -26,6 +26,9 @@ public abstract class Creature {
 		maladies.add(maladie);
 	}
 	
+	/**
+	 * Fait attendre la créature.
+	 */
 	public void attendre() {
 		if (moral <= 0) {
 			if (!hurler) {
@@ -47,16 +50,26 @@ public abstract class Creature {
 		}
 	}
 	
+	/**
+	 * Fait hurler la créature.
+	 */
 	public void hurler() {
 		System.out.println("[" + this.getNom() + " hurle]");
 		this.hurler = true;
 	}
 	
+	/**
+	 * Fait s'emporter la créature.
+	 */
 	public void semporter() {
 		System.out.println("[" + this.getNom() + " s'emporte]");
 		
 	}
 	
+	/**
+	 * Ajoute une maladie à la créature.
+	 * @param maladie La maladie ajoutée.
+	 */
 	public void ajouterMaladie(Maladie maladie) {
 		for (int i = 0; i < maladies.size(); ++i) {
 			if (maladie.getNomAbrege() == maladies.get(i).getNomAbrege()) {
@@ -67,15 +80,30 @@ public abstract class Creature {
 		System.out.println("[La créature " + getNom() + " a été infecté par la maladie " + maladie.getNomComplet() + "]");
 	}
 	
+	/**
+	 * Enlève une maladie à la créature.
+	 * @param maladie La maladie enlevée.
+	 */
 	public void enleverMaladie(Maladie maladie) {
 		this.maladies.remove(maladie);
 	}
 	
+	/**
+	 * Fait trépasser la créature.
+	 */
 	public abstract void trepasser();
+	/**
+	 * Renvoie vrai si la créature est VIP.
+	 * @return true si la créature est VIP.
+	 */
 	public boolean estVIP() {
 		return false;
 	}
 	
+	/**
+	 * Diminue le moral de la créature.
+	 * @param quantite La quantité de moral à diminuer.
+	 */
 	public void diminuerMoral(int quantite) {
 		if (this.moral - quantite > 0) {
 			setMoral(this.moral - quantite);
@@ -84,6 +112,9 @@ public abstract class Creature {
 		}
 	}
 	
+	/**
+	 * Affiche les caractéristiques de la créature.
+	 */
 	public void afficherCreature() {
 		System.out.println("Nom : " + nom);
 		System.out.println("Sexe : " + (sexe=="M" ? "Male" : "Femelle"));
@@ -96,7 +127,8 @@ public abstract class Creature {
 			maladies.get(i).afficherMaladie();
 		}
 	}
-
+	
+	//Getters et setters
 	public String getNom() {
 		return nom;
 	}

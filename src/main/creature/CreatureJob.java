@@ -57,18 +57,4 @@ public class CreatureJob implements Runnable {
 			}
 		}
 	}
-	
-//	public void contaminer() {
-//		List<Creature> creatures = new LinkedList<Creature>(hopital.getListeAttente());
-//		for (ServiceMedical service : hopital.getListeService()) {
-//			creatures.addAll(service.getCreatures());
-//		}
-//		for (Creature creature : creatures) {
-//			creature.attendre();
-//			if(creature.getMoral()<10) {
-//				
-//			}
-//		}
-//	}
-
 }

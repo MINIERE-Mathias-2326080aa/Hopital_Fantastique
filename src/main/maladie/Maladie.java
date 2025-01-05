@@ -21,26 +21,25 @@ public class Maladie {
 		this.niveauMax = maladie.getNiveauMax();
 	}
 
+	/**
+	 * Renvoie vrai si la maladie est létale.
+	 * @return true si la maladie est létale.
+	 */
 	public boolean estLetal() {
 		return niveau == niveauMax;
 	}
-	
-	public void changerNiveau(int niveau) {
-		this.niveau = niveau;
-	}
-	
+	/**
+	 * Augmente le niveau d'une maladie.
+	 */
 	public void augmenterNiveau() {
 		if (niveau < niveauMax) {	
 			this.niveau += 1;
 		}
 	}
 	
-	public void diminuerNiveau() {
-		if (niveau > 0) {
-			this.niveau -= 1;
-		}
-	}
-	
+	/**
+	 * Affiche les caractéristiques de la maladie.
+	 */
 	public void afficherMaladie() {
 		System.out.println("Nom complet : " + nomComplet);
 		System.out.println("Nom abrégé : " + nomAbrege);

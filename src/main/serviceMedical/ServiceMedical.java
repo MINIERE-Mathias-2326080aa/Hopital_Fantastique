@@ -19,6 +19,9 @@ public class ServiceMedical {
 		this.budget = budget;
 	}
 	
+	/**
+	 * Affiche les caractéristiques du service médical.
+	 */
 	public void afficherCaracteristiques() {
 		System.out.println("Nom : " + nom);
 		System.out.println("Superficie : " + superficie + "m2");
@@ -44,6 +47,10 @@ public class ServiceMedical {
 		}
 	}
 	
+	/**
+	 * Ajoute une créature au service médical.
+	 * @param creature La créature ajoutée.
+	 */
 	public void ajouterCreature(Creature creature) {
 		creature.setCreaturesProches(new ArrayList<Creature>(creatures));
 		if (!creatures.isEmpty()) {
@@ -54,17 +61,25 @@ public class ServiceMedical {
 		creatures.add(creature);
 	}
 	
+	/**
+	 * Enlève une créature du service médical.
+	 * @param creature La créature enlevée.
+	 */
 	public void enleverCreature(Creature creature) {
 		this.creatures.remove(creature);
 		for (Creature patient : creatures) {
 			patient.enleverCreatureProche(creature);
 		}
 	}
-	
+
 	public void reviserBudget() {
 		
 	}
-	
+	/**
+	 * Renvoie vrai si la créature peut être ajoutée au service médical.
+	 * @param creature La créature testée.
+	 * @return true si la créature peut être ajoutée au service médical.
+	 */
 	public boolean peutAjouter(Creature creature) {
 		return (creatures.isEmpty() || (creatures.getFirst().getClass() == creature.getClass() && (creatures.size() < nbMaxCreatures)));
 	}

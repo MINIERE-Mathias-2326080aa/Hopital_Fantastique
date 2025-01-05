@@ -27,7 +27,10 @@ public class HopitalFantastique{
 		this.listeService = new HashMap<Integer, ServiceMedical>();
 		this.medecins = new ArrayList<Medecin>();
 	}
-
+	/**
+	 * Génère une créature de manière aléatoire.
+	 * @return
+	 */
 	public static Creature genererCreature() {
 		Maladie maladie = new Maladie(getMaladies().get(random.nextInt(getMaladies().size())));
 		Creature creature;
@@ -60,7 +63,10 @@ public class HopitalFantastique{
 		}
 		return creature;
 	}
-	
+	/**
+	 * Ajoute une créature à l'hopital.
+	 * @param creature
+	 */
 	public void ajouterCreature(Creature creature) {
 		List<Creature> creaturesProches = new ArrayList<Creature>(getListeAttente());
 		creature.setCreaturesProches(creaturesProches);
@@ -69,6 +75,10 @@ public class HopitalFantastique{
 		}
 		listeAttente.addLast(creature);
 	}
+	/**
+	 * Enlève une créature de l'hopital.
+	 * @param creature La créature à enlever.
+	 */
 	public void enleverCreature(Creature creature) {
 		if (listeAttente.contains(creature)) {
 			List<Creature> creaturesProches = new ArrayList<Creature>(getListeAttente());
@@ -86,6 +96,10 @@ public class HopitalFantastique{
 		}
 		System.out.println("Ne possédant plus de maladie, la créature " + creature.getNom() + " a quitté l'hopital.");
 	}
+	/**
+	 * Ajoute un service médical à l'hopital.
+	 * @param service Le service ajouté.
+	 */
  	public void ajouterService(ServiceMedical service) {
  		if (listeService.size() < nbMaxService) {
  			this.listeService.put(compteurService, service);
@@ -93,11 +107,19 @@ public class HopitalFantastique{
  			System.out.println("Le service médical " + service.getNom() + " a été ajouté avec succès.");
  		}
 	}
+ 	/**
+ 	 * Enlève un service médical de l'hopital.
+ 	 * @param idService
+ 	 */
  	public void enleverService(int idService) {
  		if (listeService.containsKey(idService)) {
  			ServiceMedical service = listeService.get(idService);
- 			this.listeService.remove(idService);
-			System.out.println("Le service " + service.getNom() + " a été enlevé avec succès.");
+ 			if (service.getCreatures().isEmpty()) {
+ 				this.listeService.remove(idService);
+ 				System.out.println("Le service " + service.getNom() + " a été enlevé avec succès.");
+ 			} else {
+ 				System.out.println("Le service contient encore des créatures.");
+ 			}
  		}
  	}
 	
@@ -155,6 +177,9 @@ public class HopitalFantastique{
 		System.out.println("L'hopital posssède actuellement " + nbPatient + " patients.");
 	}
 	
+	/**
+	 * Méthode qui permet à l'utilisateur d'ajouter un médecin à l'hopital.
+	 */
 	public void ajouterMedecin() {
 		System.out.println("Comment voulez-vous ajouter un médecin ?");
 		System.out.println("0 Automatiquement");
@@ -251,7 +276,9 @@ public class HopitalFantastique{
 				
 		}
 	}
-	
+	/**
+	 * Méthode qui permet à l'utilisateur de créer un service médical et de l'ajouter à l'hopital.
+	 */
 	public void creerServiceMedical() {
 		if (listeService.size() >= nbMaxService) {
 			System.out.println("Nombre maximal de service atteint.");
@@ -329,6 +356,9 @@ public class HopitalFantastique{
 		}
 		ajouterService(service);
 	}
+	/**
+	 * Méthode qui permet à l'utilisateur de supprimer un service médical de l'hopital.
+	 */
 	public void supprimerServiceMedical() {
 		if (listeService.size() == 0) {
 			System.out.println("Veuillez d'abord créer un service.");
@@ -351,7 +381,9 @@ public class HopitalFantastique{
 			enleverService(choix);
 		}
 	}
-	
+	/**
+	 * Méthode qui permet à l'utilisateur de faire agir les médecins.
+	 */
 	public void gererMedecins() {
 		if (medecins.size() == 0) {
 			System.out.println("Veuillez créer un médecin.");
@@ -411,6 +443,10 @@ public class HopitalFantastique{
 				return;
 		}
 	}
+	/**
+	 * Méthode qui permet à l'utilisateur de faire examiner un service médical par un médecin.
+	 * @param medecin
+	 */
 	private void examinerServiceMedical(Medecin medecin) {
 		System.out.println("Choisissez le service que vous voulez examiner.");
 		ServiceMedical service = choisirServiceMedical();
@@ -418,6 +454,10 @@ public class HopitalFantastique{
 			return;
 		medecin.examinerService(service);
 	}
+	/**
+	 * Méthode qui permet à l'utilisateur de faire soigner une créature par un médecin.
+	 * @param medecin
+	 */
 	private void soignerCreatureServiceMedical(Medecin medecin) {
 		System.out.println("Choisissez dans quel service vous voulez soigner une créature :");
 		ServiceMedical service = choisirServiceMedical();
@@ -443,6 +483,10 @@ public class HopitalFantastique{
 			}
 		}	
 	}
+	/**
+	 * Méthode permettant à l'utilisateur de transférer une créature vers un service médical.
+	 * @param medecin
+	 */
 	private void transfererCreature(Medecin medecin) {
 		System.out.println("---Transfert de créature---");
 		System.out.println("Choisissez la source :");
@@ -489,16 +533,20 @@ public class HopitalFantastique{
 			if (creature == null)
 				return;
 			System.out.println("Dans quel service médical voulez-vous le transférer");
-			afficherServicesMedicaux();
 			ServiceMedical serviceDestination = choisirServiceMedical();
 			if (serviceDestination == null)
 				return;
-			medecin.transfererCreature(creature, source, serviceDestination);
+			medecin.transfererCreature(creature, source.getCreatures(), serviceDestination);
 		}
 	}
 	
+	/**
+	 * Méthode permettant à l'utilisateur de choisir un service médical.
+	 * @return
+	 * Le service médical choisi ou null si l'utilisateur annule l'opération.
+	 */
 	private ServiceMedical choisirServiceMedical() {
-		this.afficherServicesMedicaux();
+		afficherServicesMedicaux();
 		System.out.println("(" + listeService.size() + ") Annuler");
 		Scanner scanner = new Scanner(System.in);
 		int choixS = scanner.nextInt();
@@ -513,6 +561,11 @@ public class HopitalFantastique{
 		}
 		return listeService.get(choixS);
 	}
+	/**
+	 * Méthode permettant à l'utilisateur de choisir une créature dans un service médical.
+	 * @param service Un service médical.
+	 * @return Une créature choisie par l'utilisateur ou null si l'utilisateur annule l'opération.
+	 */
 	private Creature choisirCreature(ServiceMedical service) {
 		for (int i = 0; i < service.getCreatures().size(); ++i) {
 			Creature creature = service.getCreatures().get(i);
@@ -531,6 +584,10 @@ public class HopitalFantastique{
 			return null;
 		return service.getCreatures().get(choixC);
 	}
+	/**
+	 * Méthode permettant à l'utilisateur de choisir une maladie d'une créature.
+	 * @return La maladie choisie par l'utilisateur ou null si l'utilisateur annule l'opération.
+	 */
 	private Creature choisirCreatureListeAttente() {
 		afficherListeAttente();
 		System.out.println("(" + listeAttente.size() + ") Annuler");
@@ -567,6 +624,10 @@ public class HopitalFantastique{
 	}
 
 	// Getters et Setters
+	/**
+	 * Récupère les médecins qui peuvent agir.
+	 * @return Une Map contenant des identifiants et les médecins qui peuvent agir.
+	 */
 	public Map<Integer, Medecin> getMedecinsDispo(){
 		Map<Integer, Medecin> medecinsDispo = new HashMap<Integer, Medecin>();
 		for (int i = 0; i < medecins.size(); ++i) {
@@ -576,6 +637,10 @@ public class HopitalFantastique{
 		}
 		return medecinsDispo;
 	}
+	/**
+	 * Récupère toutes les créatures de l'hopital.
+	 * @return La liste de toutes les créatures de l'hopital.
+	 */
 	public List<Creature> getToutesCreatures(){
 		List<Creature> creatures = new ArrayList<Creature>(listeAttente);
 		for (int i=0; i < listeService.size(); ++i) {

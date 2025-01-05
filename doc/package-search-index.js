@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"main.creature"},{"l":"main.hopital"},{"l":"main.maladie"},{"l":"main.serviceMedical"},{"l":"main.simulation"}];updateSearchResults();
