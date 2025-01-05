@@ -1,6 +1,5 @@
 package main.hopital;
 
-import java.security.Provider.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,15 +17,16 @@ public class HopitalFantastique{
 	private List<Creature> listeAttente;
 	private Map<Integer, ServiceMedical> listeService;
 	private static List<Maladie> maladies;
-	private Map<Integer, Medecin> medecins;
+	private List<Medecin> medecins;
 	private int compteurMedecin = 0;
+	private int compteurService = 0;
 	private int nbMaxService = 10;
 	public static boolean quitter = false;
 	
 	public HopitalFantastique() {
 		this.listeAttente = new ArrayList<Creature>();
 		this.listeService = new HashMap<Integer, ServiceMedical>();
-		this.medecins = new HashMap<Integer, Medecin>();
+		this.medecins = new ArrayList<Medecin>();
 	}
 
 	public static Creature genererCreature() {
@@ -79,14 +79,16 @@ public class HopitalFantastique{
 	}
  	public void ajouterService(ServiceMedical service) {
  		if (listeService.size() < nbMaxService) {
- 			this.listeService.put(listeService.size(), service);
+ 			this.listeService.put(compteurService, service);
+ 			++compteurService;
+ 			System.out.println("Le service médical " + service + " a été ajouté avec succès.");
  		}
 	}
  	public void enleverService(int idService) {
  		if (listeService.containsKey(idService)) {
  			ServiceMedical service = listeService.get(idService);
  			this.listeService.remove(idService);
-			System.out.println("Le service " + service.getNom() + " a été supprimé avec succès.");
+			System.out.println("Le service " + service.getNom() + " a été enlevé avec succès.");
  		}
  	}
 	
@@ -100,11 +102,21 @@ public class HopitalFantastique{
 			System.out.println("(" + i + ") " + creature);
 		}
 	}
-	public void afficherMedecins() {
+	public void afficherMedecins(List<Medecin> medecins) {
+		System.out.println("---------------------------");
+		System.out.println("Liste des médecins:");
+		for (int i = 0; i < medecins.size(); ++i) {
+			Medecin medecin = medecins.get(i);
+			System.out.println("(" + i + ") " + medecin);
+			System.out.println("	Actions restantes : " + medecin.getNbAction());
+		}
+	}
+	public void afficherMedecins(Map<Integer, Medecin> medecins) {
 		System.out.println("---------------------------");
 		System.out.println("Liste des médecins:");
 		for (Entry <Integer, Medecin> entry : medecins.entrySet()) {
 			System.out.println("(" + entry.getKey() + ") " + entry.getValue());
+			System.out.println("	Actions restantes : " + entry.getValue().getNbAction());
 		}
 	}
 	public static void afficherMaladies() {
@@ -157,8 +169,7 @@ public class HopitalFantastique{
 		switch(choix) {
 			case(0):
 				medecin = new Medecin(genererCreature());
-				this.medecins.put(compteurMedecin, medecin);
-				++this.compteurMedecin;
+				this.medecins.add(medecin);
 				break;
 			case(1):{
 				String type = null;
@@ -232,8 +243,7 @@ public class HopitalFantastique{
 				scanner.nextLine();
 				
 				medecin = new Medecin(type, nom, sexe, age);
-				this.medecins.put(compteurMedecin, medecin);
-				++this.compteurMedecin;
+				this.medecins.add(medecin);
 				break;
 			}
 				
@@ -347,118 +357,158 @@ public class HopitalFantastique{
 			System.out.println("Veuillez créer un service médical.");
 			return;
 		}
-		afficherMedecins();
-		System.out.println("(" + medecins.size() + ") Annuler");
+		Map <Integer, Medecin> medecinsDispo = getMedecinsDispo();
+		if (medecinsDispo.size() == 0) {
+			System.out.println("Aucun médecin ne peut agir actuellement.");
+		}
+		afficherMedecins(medecinsDispo);
+		System.out.println("(" + medecinsDispo.size() + ") Annuler");
 		System.out.println("Quel médecin voulez-vous jouer ?");
 		Scanner scanner = new Scanner(System.in);
 		int id = scanner.nextInt();
 		scanner.nextLine();
-		while(id < 0 || medecins.size() < id) {
-			System.out.println("Choisissez un nombre entre 0 et " + (medecins.size()) + ".");
+		while(id < 0 || medecinsDispo.size() < id) {
+			System.out.println("Choisissez un nombre entre 0 et " + (medecinsDispo.size()) + ".");
 			id = scanner.nextInt();
 			scanner.nextLine();
 		}
-		if (id == medecins.size()) {
+		if (id == medecinsDispo.size()) {
 			return;
 		}
-		Medecin medecin = medecins.get(id);
+		Medecin medecin = medecinsDispo.get(id);
 
 		System.out.println("Que voulez-vous que le médecin fasse :");
 		System.out.println("0 Examiner un service médical");
 		System.out.println("1 Soigner les créatures d'un service médical.");
 		System.out.println("2 Transférer une créature vers un service médical.");
 		System.out.println("3 Réviser le budget d'un service médical.");
+		System.out.println("4 Annuler");
 		int action = scanner.nextInt();
 		scanner.nextLine();
-		while(action < 0 || 3 < action) {
-			System.out.println("Veuillez écrire un nombre entre 0 et 3.");
+		while(action < 0 || 4 < action) {
+			System.out.println("Veuillez écrire un nombre entre 0 et 4.");
 			action = scanner.nextInt();
 			scanner.nextLine();
 		}
 		
 		switch(action) {
 			case(0):{
-				System.out.println("Choisissez le service que vous voulez examiner.");
-				ServiceMedical service = choisirServiceMedical();
-				medecin.examinerService(service);
+				examinerServiceMedical(medecin);
 				break;
 			}
 			case(1):{
-				System.out.println("Choisissez dans quel service vous voulez soigner une créature :");
-				ServiceMedical service = choisirServiceMedical();
-				if (service.getCreatures().isEmpty()) {
-					System.out.println("Choisissez un autre service ou transférez une créature vers ce service.");
-					break;
-				} else {
-					System.out.println("Quelle créature voulez-vous soigner ?");
-					Creature creature = choisirCreature(service);
-					System.out.println("Quelle maladie voulez-vous soigner ?");
-					Maladie maladie = choisirMaladie(creature);
-					medecin.soignerCreature(creature, maladie);
-					System.out.println("La créature " + creature.getNom() + " a été guérie de la maladie " + maladie.getNomComplet());
-					if (creature.getMaladies().isEmpty()) {
-						System.out.println("Étant totalement guérie, la créature " + creature.getNom() + " a quitté l'hopital.");
-						service.enleverCreature(creature);
-					}
-				}	
+				soignerCreatureServiceMedical(medecin);
 				break;
 			}
 			case(2):{
-				System.out.println("---Transfert de créature---");
-				System.out.println("Choisissez la source :");
-				System.out.println("0 Liste d'attente");
-				System.out.println("1 Service médical");
-				scanner = new Scanner(System.in);
-				int choixSource = scanner.nextInt();
-				while(choixSource < 0 || 1 < choixSource) {
-					System.out.println("Veuillez écrire un nombre entre 0 et 1.");
-					choixSource = scanner.nextInt();
-					scanner.nextLine();
-				}
-				if (choixSource == 0) {
-					if (listeAttente.isEmpty()) {
-						System.out.println("Aucune créature n'est présente dans la liste d'attente.");
-						break;
-					}
-					System.out.println("Quelle créature voulez-vous transférer ?");
-					Creature creature = choisirCreatureListeAttente();
-					System.out.println("Dans quel service médical voulez-vous le transférer ?");
-					ServiceMedical serviceDestination = choisirServiceMedical();
-					medecin.transfererCreature(creature, this.listeAttente, serviceDestination);
-				} else {
-					if (this.getListeService().size() < 2 ){
-						System.out.println("Il n'y a pas assez de services.");
-						break;
-					}
-					ServiceMedical source = choisirServiceMedical();
-					if (source.getCreatures().isEmpty()) {
-						System.out.println("Ce service ne contient pas de créatures.");
-						break;
-					}
-					System.out.println("Quelle créature voulez-vous transférer ?");
-					Creature creature = choisirCreature(source);
-					System.out.println("Dans quel service médical voulez-vous le transférer");
-					afficherServicesMedicaux();
-					ServiceMedical serviceDestination = choisirServiceMedical();
-					medecin.transfererCreature(creature, source, serviceDestination);
-				}
+				transfererCreature(medecin);
 				break;
 			}
-			case(3):{
+			case(3):
 				break;
+			case(4):
+				return;
+		}
+	}
+	private void examinerServiceMedical(Medecin medecin) {
+		System.out.println("Choisissez le service que vous voulez examiner.");
+		ServiceMedical service = choisirServiceMedical();
+		if (service == null)
+			return;
+		medecin.examinerService(service);
+	}
+	private void soignerCreatureServiceMedical(Medecin medecin) {
+		System.out.println("Choisissez dans quel service vous voulez soigner une créature :");
+		ServiceMedical service = choisirServiceMedical();
+		if (service == null) {
+			return;
+		} else if (service.getCreatures().isEmpty()) {
+			System.out.println("Choisissez un autre service ou transférez une créature vers ce service.");
+			return;
+		} else {
+			System.out.println("Quelle créature voulez-vous soigner ?");
+			Creature creature = choisirCreature(service);
+			if (creature == null)
+				return;
+			System.out.println("Quelle maladie voulez-vous soigner ?");
+			Maladie maladie = choisirMaladie(creature);
+			if (maladie == null)
+				return;
+			medecin.soignerCreature(creature, maladie);
+			System.out.println("La créature " + creature.getNom() + " a été guérie de la maladie " + maladie.getNomComplet());
+			if (creature.getMaladies().isEmpty()) {
+				System.out.println("Étant totalement guérie, la créature " + creature.getNom() + " a quitté l'hopital.");
+				service.enleverCreature(creature);
 			}
+		}	
+	}
+	private void transfererCreature(Medecin medecin) {
+		System.out.println("---Transfert de créature---");
+		System.out.println("Choisissez la source :");
+		System.out.println("0 Liste d'attente");
+		System.out.println("1 Service médical");
+		System.out.println("2 Annuler");
+		Scanner scanner = new Scanner(System.in);
+		int choixSource = scanner.nextInt();
+		while(choixSource < 0 || 2 < choixSource) {
+			System.out.println("Veuillez écrire un nombre entre 0 et 2.");
+			choixSource = scanner.nextInt();
+			scanner.nextLine();
+		}
+		if (choixSource == 2) {
+			return;
+		} else if (choixSource == 0) {
+			if (listeAttente.isEmpty()) {
+				System.out.println("Aucune créature n'est présente dans la liste d'attente.");
+				return;
+			}
+			System.out.println("Quelle créature voulez-vous transférer ?");
+			Creature creature = choisirCreatureListeAttente();
+			if (creature == null)
+				return;
+			System.out.println("Dans quel service médical voulez-vous le transférer ?");
+			ServiceMedical serviceDestination = choisirServiceMedical();
+			if (serviceDestination == null)
+				return;
+			medecin.transfererCreature(creature, this.listeAttente, serviceDestination);
+		} else {
+			if (this.getListeService().size() < 2 ){
+				System.out.println("Il n'y a pas assez de services.");
+				return;
+			}
+			ServiceMedical source = choisirServiceMedical();
+			if (source == null)
+				return;
+			if (source.getCreatures().isEmpty()) {
+				System.out.println("Ce service ne contient pas de créatures.");
+				return;
+			}
+			System.out.println("Quelle créature voulez-vous transférer ?");
+			Creature creature = choisirCreature(source);
+			if (creature == null)
+				return;
+			System.out.println("Dans quel service médical voulez-vous le transférer");
+			afficherServicesMedicaux();
+			ServiceMedical serviceDestination = choisirServiceMedical();
+			if (serviceDestination == null)
+				return;
+			medecin.transfererCreature(creature, source, serviceDestination);
 		}
 	}
 	
 	private ServiceMedical choisirServiceMedical() {
 		this.afficherServicesMedicaux();
+		System.out.println("(" + listeService.size() + ") Annuler");
 		Scanner scanner = new Scanner(System.in);
 		int choixS = scanner.nextInt();
 		scanner.nextLine();
-		while(choixS < 0 || listeService.size()-1 < choixS) {
-			System.out.println("Veuillez écrire un nombre entre 0 et " + (listeService.size()-1) + ".");
+		while(choixS < 0 || listeService.size() < choixS) {
+			System.out.println("Veuillez écrire un nombre entre 0 et " + listeService.size() + ".");
 			choixS = scanner.nextInt();
 			scanner.nextLine();
+		}
+		if (choixS == listeService.size()) {
+			return null;
 		}
 		return listeService.get(choixS);
 	}
@@ -467,27 +517,33 @@ public class HopitalFantastique{
 			Creature creature = service.getCreatures().get(i);
 			System.out.println("(" + i + ") " + creature);
 		}
+		System.out.println("(" + service.getCreatures().size() + ") Annuler");
 		Scanner scanner = new Scanner(System.in);
 		int choixC = scanner.nextInt();
 		scanner.nextLine();
-		while(choixC < 0 || service.getCreatures().size()-1 < choixC) {
-			System.out.println("Veuillez écrire un nombre entre 0 et " + (service.getCreatures().size()-1) + ".");
+		while(choixC < 0 || service.getCreatures().size() < choixC) {
+			System.out.println("Veuillez écrire un nombre entre 0 et " + service.getCreatures().size() + ".");
 			choixC = scanner.nextInt();
 			scanner.nextLine();
 		}
+		if (choixC == service.getCreatures().size())
+			return null;
 		return service.getCreatures().get(choixC);
 	}
 	private Creature choisirCreatureListeAttente() {
 		afficherListeAttente();
+		System.out.println("(" + listeAttente.size() + ") Annuler");
 		Scanner scanner = new Scanner(System.in);
 		int choixC = scanner.nextInt();
 		scanner.nextLine();
-		while(choixC < 0 || listeAttente.size()-1 < choixC) {
-			System.out.println("Veuillez écrire un nombre entre 0 et " + (listeAttente.size()-1) + ".");
+		while(choixC < 0 || listeAttente.size() < choixC) {
+			System.out.println("Veuillez écrire un nombre entre 0 et " + listeAttente.size() + ".");
 			afficherListeAttente();
 			choixC = scanner.nextInt();
 			scanner.nextLine();
 		}
+		if (choixC == listeAttente.size())
+			return null;
 		return listeAttente.get(choixC);
 	}
 	private Maladie choisirMaladie(Creature creature) {
@@ -495,18 +551,32 @@ public class HopitalFantastique{
 			Maladie maladie = creature.getMaladies().get(i);
 			System.out.println("(" + i + ") " + maladie);
 		}
+		System.out.println("(" + creature.getMaladies().size()+ ") Annuler");
 		Scanner scanner = new Scanner(System.in);
 		int choixM = scanner.nextInt();
 		scanner.nextLine();
-		while(choixM < 0 || creature.getMaladies().size()-1 < choixM) {
-			System.out.println("Veuillez écrire un nombre entre 0 et " + (creature.getMaladies().size()-1) + ".");
+		while(choixM < 0 || creature.getMaladies().size() < choixM) {
+			System.out.println("Veuillez écrire un nombre entre 0 et " + creature.getMaladies().size() + ".");
 			choixM = scanner.nextInt();
 			scanner.nextLine();
 		}
+		if (choixM == creature.getMaladies().size())
+			return null;
 		return creature.getMaladies().get(choixM);
 	}
+
+	
 	
 	// Getters et Setters
+	public Map<Integer, Medecin> getMedecinsDispo(){
+		Map<Integer, Medecin> medecinsDispo = new HashMap<Integer, Medecin>();
+		for (int i = 0; i < medecins.size(); ++i) {
+			if (medecins.get(i).peutAgir()) {
+				medecinsDispo.put(medecinsDispo.size(), medecins.get(i));
+			}
+		}
+		return medecinsDispo;
+	}
 	public List<Creature> getToutesCreatures(){
 		List<Creature> creatures = new ArrayList<Creature>(listeAttente);
 		for (int i=0; i<listeService.size(); ++i) {
@@ -529,13 +599,12 @@ public class HopitalFantastique{
 	public static void setMaladies(List<Maladie> maladies) {
 		HopitalFantastique.maladies = maladies;
 	}
-	public Map<Integer, Medecin> getMedecins() {
+	public List<Medecin> getMedecins() {
 		return this.medecins;
 	}
 	public void setMedecins(List<Medecin> medecins) {
 		for (Medecin medecin : medecins) {
-			this.medecins.put(compteurMedecin, medecin);
-			++compteurMedecin;
+			this.medecins.add(medecin);
 		}
 	}
 }

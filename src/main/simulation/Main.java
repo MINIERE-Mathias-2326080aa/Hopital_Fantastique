@@ -25,6 +25,10 @@ public class Main {
 		Medecin medecin3 = new Medecin(HopitalFantastique.genererCreature());
 		hopital.setMedecins(new ArrayList<Medecin>(Arrays.asList(medecin1,medecin2,medecin3)));
 		
+		Runnable medecinJob = new MedecinJob(hopital);
+		Thread medecinThread = new Thread(medecinJob);
+		medecinThread.start();
+		
 		Runnable creatureJob = new CreatureJob(hopital);
 		Thread creatureThread = new Thread(creatureJob);
 		creatureThread.start();
@@ -64,7 +68,7 @@ public class Main {
 					hopital.afficherListeAttente();
 					break;
 				case 2:
-					hopital.afficherMedecins();
+					hopital.afficherMedecins(hopital.getMedecins());
 					break;
 				case(3):
 					hopital.afficherServicesMedicaux();

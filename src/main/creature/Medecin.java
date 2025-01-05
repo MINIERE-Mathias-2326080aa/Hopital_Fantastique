@@ -11,6 +11,8 @@ public class Medecin {
 	private String nom;
 	private String sexe;
 	private int age;
+	private int nbActionMax = 2;
+	private int nbAction = nbActionMax;
 
 	public Medecin(Creature creature) {
 		super();
@@ -30,16 +32,20 @@ public class Medecin {
 
 	public void examinerService(ServiceMedical service) {
 		service.afficherCaracteristiques();
+		this.nbAction -= 1;
 	}
 	
 	public void soignerCreature(Creature creature, Maladie maladie) {
 		creature.enleverMaladie(maladie);
+		this.nbAction -= 1;
 	}
 	
 	public void transfererCreature(Creature creature, ServiceMedical serviceSource, ServiceMedical serviceDestination) {
 		if (serviceDestination.peutAjouter(creature)) {
 			serviceSource.enleverCreature(creature);
 			serviceDestination.ajouterCreature(creature);
+			System.out.println("La créature a bien été transférée.");
+			this.nbAction -= 1;
 		} else {
 			System.out.println("La créature n'a pas pu être transférée.");
 		}
@@ -53,10 +59,28 @@ public class Medecin {
 			}
 			source.remove(creature);
 			serviceDestination.ajouterCreature(creature);
+			System.out.println("La créature a bien été transférée.");
+			this.nbAction -= 1;
 		} else {
 			System.out.println("La créature n'a pas pu être transférée.");
 		}
 		
+	}
+	
+	public boolean peutAgir() {
+		return nbAction > 0;
+	}
+
+	public int getNbActionMax() {
+		return nbActionMax;
+	}
+
+	public int getNbAction() {
+		return nbAction;
+	}
+
+	public void setNbAction(int nbAction) {
+		this.nbAction = nbAction;
 	}
 
 	@Override
