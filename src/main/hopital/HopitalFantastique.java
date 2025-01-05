@@ -81,6 +81,9 @@ public class HopitalFantastique{
  			this.listeService.put(listeService.size(), service);
  		}
 	}
+ 	public void enleverService(ServiceMedical service) {
+ 		this.listeService.remove(service);
+ 	}
 	
  	// Fonctions d'affichage
 	public void afficherListeAttente() {
@@ -241,7 +244,6 @@ public class HopitalFantastique{
 		} else {
 			System.out.println("Vous pouvez encore créer " + (nbMaxService - listeService.size()) + " services.");
 		}
-		
 		String type;
 		String nom;
 		int superficie;
@@ -308,6 +310,30 @@ public class HopitalFantastique{
 		}
 		ajouterService(service);
 	}
+	public void supprimerServiceMedical() {
+		if (listeService.size() == 0) {
+			System.out.println("Veuillez d'abord créer un service.");
+			return;
+		}
+		afficherServicesMedicaux();
+		System.out.println("(" + listeService.size() + ") Annuler");
+		System.out.println("Quel service voulez-vous supprimer ?");
+		Scanner scanner = new Scanner(System.in);
+		int choix = scanner.nextInt();
+		scanner.nextLine();
+		while (choix < 0 || listeService.size() < choix) {
+			System.out.println("Veuillez recommencer.");
+			choix = scanner.nextInt();
+			scanner.nextLine();
+		}
+		if (choix == listeService.size()) {
+			return;
+		} else {
+			ServiceMedical service = listeService.get(choix);
+			enleverService(service);
+			System.out.println("Le service " + service.getNom() + " a été supprimé avec succès.");
+		}
+	}
 	
 	public void gererMedecins() {
 		if (medecins.size() == 0) {
@@ -319,14 +345,18 @@ public class HopitalFantastique{
 			return;
 		}
 		afficherMedecins();
+		System.out.println("(" + medecins.size() + ") Annuler");
 		System.out.println("Quel médecin voulez-vous jouer ?");
 		Scanner scanner = new Scanner(System.in);
 		int id = scanner.nextInt();
 		scanner.nextLine();
-		while(id < 0 || medecins.size()-1 < id) {
-			System.out.println("Choisissez un nombre entre 0 et " + (medecins.size()-1) + ".");
+		while(id < 0 || medecins.size() < id) {
+			System.out.println("Choisissez un nombre entre 0 et " + (medecins.size()) + ".");
 			id = scanner.nextInt();
 			scanner.nextLine();
+		}
+		if (id == medecins.size()) {
+			return;
 		}
 		Medecin medecin = medecins.get(id);
 
