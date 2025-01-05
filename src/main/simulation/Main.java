@@ -40,11 +40,11 @@ public class Main {
 			System.out.println("0 Quitter");
 			System.out.println("1 Afficher la liste d'attente");
 			System.out.println("2 Afficher les médecins");
-			System.out.println("3 Afficher les maladies");
-			System.out.println("4 Afficher les services médicaux");
-			System.out.println("5 Afficher le nombre de patients");
-			System.out.println("6 Ajouter un médecin");
-			System.out.println("7 Créer un service medical");
+			System.out.println("3 Afficher les services médicaux");
+			System.out.println("4 Afficher le nombre de patients");
+			System.out.println("5 Ajouter un médecin");
+			System.out.println("6 Créer un service medical");
+			System.out.println("7 Supprimer un service medical");
 			System.out.println("8 Gérer les médecins");
 			System.out.println("---------------------------");
 			int choix = scanner.nextInt();
@@ -67,19 +67,19 @@ public class Main {
 					hopital.afficherMedecins();
 					break;
 				case(3):
-					HopitalFantastique.afficherMaladies();
-					break;
-				case(4):
 					hopital.afficherServicesMedicaux();
 					break;
-				case(5):
+				case(4):
 					hopital.afficherNbPatients();
 					break;
-				case(6):
+				case(5):
 					hopital.ajouterMedecin();
 					break;
-				case(7):
+				case(6):
 					hopital.creerServiceMedical();
+					break;
+				case(7):
+					hopital.supprimerServiceMedical();
 					break;
 				case(8):
 					hopital.gererMedecins();

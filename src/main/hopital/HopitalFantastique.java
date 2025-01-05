@@ -1,5 +1,6 @@
 package main.hopital;
 
+import java.security.Provider.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,8 +82,12 @@ public class HopitalFantastique{
  			this.listeService.put(listeService.size(), service);
  		}
 	}
- 	public void enleverService(ServiceMedical service) {
- 		this.listeService.remove(service);
+ 	public void enleverService(int idService) {
+ 		if (listeService.containsKey(idService)) {
+ 			ServiceMedical service = listeService.get(idService);
+ 			this.listeService.remove(idService);
+			System.out.println("Le service " + service.getNom() + " a été supprimé avec succès.");
+ 		}
  	}
 	
  	// Fonctions d'affichage
@@ -329,9 +334,7 @@ public class HopitalFantastique{
 		if (choix == listeService.size()) {
 			return;
 		} else {
-			ServiceMedical service = listeService.get(choix);
-			enleverService(service);
-			System.out.println("Le service " + service.getNom() + " a été supprimé avec succès.");
+			enleverService(choix);
 		}
 	}
 	
