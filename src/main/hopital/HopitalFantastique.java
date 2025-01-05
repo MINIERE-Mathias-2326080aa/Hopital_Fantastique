@@ -19,7 +19,7 @@ public class HopitalFantastique{
 	private static List<Maladie> maladies;
 	private Map<Integer, Medecin> medecins;
 	private int compteurMedecin = 0;
-	private int compteurService = 0;
+	private int nbMaxService = 10;
 	public static boolean quitter = false;
 	
 	public HopitalFantastique() {
@@ -77,8 +77,9 @@ public class HopitalFantastique{
 		listeAttente.remove(creature);
 	}
  	public void ajouterService(ServiceMedical service) {
-		this.listeService.put(compteurService, service);
-		++this.compteurService;
+ 		if (listeService.size() < nbMaxService) {
+ 			this.listeService.put(listeService.size(), service);
+ 		}
 	}
 	
  	// Fonctions d'affichage
@@ -232,6 +233,15 @@ public class HopitalFantastique{
 	}
 	
 	public void creerServiceMedical() {
+		if (listeService.size() >= nbMaxService) {
+			System.out.println("Nombre maximal de service atteint.");
+			return;
+		} else if(nbMaxService - listeService.size() == 1) {
+			System.out.println("Vous pouvez encore créer 1 service.");
+		} else {
+			System.out.println("Vous pouvez encore créer " + (nbMaxService - listeService.size()) + " services.");
+		}
+		
 		String type;
 		String nom;
 		int superficie;
